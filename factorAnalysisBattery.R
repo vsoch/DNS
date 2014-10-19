@@ -7,6 +7,7 @@ library(qgraph)
 library(psych)
 library(pheatmap)
 library(nFactors)
+library(Hmisc)
 
 # Esther Salazar functions for factor analysis
 setwd("/home/vanessa/Documents/Dropbox/Code/R/DNS")
@@ -31,10 +32,10 @@ for (g in 1:length(uniquegroups)){
   
   # Plot the questions
   if (length(data)>0){
-    par(mfrow=c(5,6))
+    par(mfrow=c(2,4))
     
     # Visualize distributions
-    label = "BCOPE"
+    label = "ADHD"
     for (d in 1:ncol(data)){
       hist(data[,d],main=colnames(data)[d],col=sample(colours(),1),xlab="")
     }
@@ -50,8 +51,14 @@ for (g in 1:length(uniquegroups)){
     }
       
     # Get rid of people we don't have data for
-    data = data[rowSums(is.na(data))!=ncol(data), ]
+    data = data[which(as.numeric(rowSums(!is.na(data)))==ncol(data)), ]
     dim(data)
+    
+    # If we need to impute - ONLY allow 1 missing value / person!
+    cols = unique(which(is.na(data),arr.ind=TRUE)[,2])
+    for (col in cols){
+      data[,col] = as.integer(impute(data[,col],mean))
+    }
     
     # Figure out number of factors with Cattell Scree test
     # Determine Number of Factors to Extract
