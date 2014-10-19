@@ -58,8 +58,6 @@ genes = unique(genes)
 # Find overlap
 idx = which(mapping$gene %in% genes)
 
-# We only have one for ASD! omg.
-
 # For ALL genes, we have 52.  Let's create a matrix of just
 # Those genes
 keepers = mapping[idx,]
