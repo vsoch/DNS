@@ -28,14 +28,14 @@ for (g in 1:length(uniquegroups)){
   data = battery$filtered[,which(colnames(battery$battery) %in% as.character(questions$LABEL))]
   
   dim(data)
-  questions
+  questions$LABEL
   
   # Plot the questions
   if (length(data)>0){
-    par(mfrow=c(2,4))
+    par(mfrow=c(2,5))
     
     # Visualize distributions
-    label = "ADHD"
+    label = "AUDIT"
     for (d in 1:ncol(data)){
       hist(data[,d],main=colnames(data)[d],col=sample(colours(),1),xlab="")
     }
@@ -53,12 +53,6 @@ for (g in 1:length(uniquegroups)){
     # Get rid of people we don't have data for
     data = data[which(as.numeric(rowSums(!is.na(data)))==ncol(data)), ]
     dim(data)
-    
-    # If we need to impute - ONLY allow 1 missing value / person!
-    cols = unique(which(is.na(data),arr.ind=TRUE)[,2])
-    for (col in cols){
-      data[,col] = as.integer(impute(data[,col],mean))
-    }
     
     # Figure out number of factors with Cattell Scree test
     # Determine Number of Factors to Extract
@@ -136,3 +130,9 @@ for (g in 1:length(uniquegroups)){
 
 # Which factors will we choose?
 # factors = as.numeric(which(colSums(Zthresh)>0))
+
+# If we need to impute - FOR TESTING ONLY
+# cols = unique(which(is.na(data),arr.ind=TRUE)[,2])
+# for (col in cols){
+#  data[,col] = as.integer(impute(data[,col],mean))
+#}
